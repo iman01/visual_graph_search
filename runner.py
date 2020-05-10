@@ -6,6 +6,7 @@ import time
 COLOR_BG = (0, 0, 0)
 COLOR_FG = (128, 128, 128)
 COLOR_GRID = (255, 255, 255)
+COLOR_WALL = (128, 0, 64)
 
 COLOR_TEXT = (0, 0, 0)
 
@@ -27,6 +28,8 @@ board_width = ((2 / 3) * width) - (BOARD_PADDING * 2)
 board_height = height - (BOARD_PADDING * 2)
 cell_size = int(min(board_width / WIDTH, board_height / HEIGHT))
 board_origin = (BOARD_PADDING, BOARD_PADDING)
+
+walls = set()
 
 while True:
 
@@ -50,7 +53,7 @@ while True:
                 cell_size, cell_size
             )
 
-            pygame.draw.rect(screen, COLOR_FG, rect)
+            pygame.draw.rect(screen, COLOR_WALL if (i, j) in walls else COLOR_FG, rect)
             pygame.draw.rect(screen, COLOR_GRID, rect, 3)
         
             row.append(rect)
@@ -90,6 +93,7 @@ while True:
 
         # Reset button clicked
         elif resetButton.collidepoint(mouse):
+            walls = set()
             continue
 
         # Cell clicked
@@ -97,7 +101,6 @@ while True:
             for i in range(HEIGHT):
                 for j in range(WIDTH):
                     if (cells[i][j].collidepoint(mouse)):
-                        print((i, j))
-                        time.sleep(0.2)
+                        walls.add((i, j))
 
     pygame.display.flip()
