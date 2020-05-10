@@ -6,12 +6,12 @@ import time
 COLOR_BG = (0, 0, 0)
 COLOR_FG = (128, 128, 128)
 COLOR_GRID = (255, 255, 255)
-COLOR_WALL = (128, 0, 64)
+COLOR_WALL = (64, 128, 128)
 
 COLOR_TEXT = (0, 0, 0)
 
 pygame.init()
-size = width, height = 600, 400
+size = width, height = 800, 600
 screen = pygame.display.set_mode(size)
 
 # Fonts
@@ -29,7 +29,15 @@ board_height = height - (BOARD_PADDING * 2)
 cell_size = int(min(board_width / WIDTH, board_height / HEIGHT))
 board_origin = (BOARD_PADDING, BOARD_PADDING)
 
+# Add images
+start_icon = pygame.image.load("assets/images/start.png")
+start_icon = pygame.transform.scale(start_icon, (cell_size, cell_size))
+goal_icon = pygame.image.load("assets/images/goal.png")
+goal_icon = pygame.transform.scale(goal_icon, (cell_size, cell_size))
+
 walls = set()
+start = None
+goal = None
 
 while True:
 
@@ -55,6 +63,11 @@ while True:
 
             pygame.draw.rect(screen, COLOR_WALL if (i, j) in walls else COLOR_FG, rect)
             pygame.draw.rect(screen, COLOR_GRID, rect, 3)
+
+            if start == (i, j):
+                screen.blit(start_icon, rect)
+            elif goal == (i, j):
+                screen.blit(goal_icon, rect)
         
             row.append(rect)
         cells.append(row)
@@ -94,6 +107,8 @@ while True:
         # Reset button clicked
         elif resetButton.collidepoint(mouse):
             walls = set()
+            start = None
+            goal = None
             continue
 
         # Cell clicked
@@ -102,5 +117,16 @@ while True:
                 for j in range(WIDTH):
                     if (cells[i][j].collidepoint(mouse)):
                         walls.add((i, j))
+    elif right == 1:
+        mouse = pygame.mouse.get_pos()
+
+        # Cell right-clicked
+        for i in range(HEIGHT):
+            for j in range(WIDTH):
+                if (cells[i][j].collidepoint(mouse)):
+                    if start is None:
+                        start = (i, j)
+                    elif goal is None and start != (i, j):
+                        goal = (i, j)
 
     pygame.display.flip()
