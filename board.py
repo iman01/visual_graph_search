@@ -12,6 +12,10 @@ class Board:
         self.cell_size = int(min(board_width / cols, board_height / rows))
         self.reset()
 
+        # Fonts
+        OPEN_SANS = "assets/fonts/OpenSans-Regular.ttf"
+        self.font = pygame.font.Font(OPEN_SANS, int(self.cell_size * 0.7))
+
     def reset(self):
         self.walls = set()
         self.explored = set()
@@ -44,6 +48,9 @@ class Board:
 
         return neighbors
 
+    def distance(self, first, second):
+        return (abs(first[0] - second[0]) + abs(first[1] - second[1]))
+
     def draw(self, screen, origin):
         self.board_origin = origin
 
@@ -66,6 +73,12 @@ class Board:
 
                 pygame.draw.rect(screen, color, rect)
                 pygame.draw.rect(screen, colors.dict['GRID'], rect, 3)
+
+                if (i, j) in self.path or (i, j) in self.explored:
+                    text = self.font.render(str(self.distance((i, j), self.goal)), True, colors.dict['TEXT'])
+                    font_rect = text.get_rect()
+                    font_rect.center = rect.center
+                    screen.blit(text, font_rect)
             
                 row.append(rect)
             self.cells.append(row)

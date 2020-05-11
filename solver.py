@@ -46,14 +46,11 @@ class Solver:
 
             self.board.explored.add(node.state)
 
-    def distance(self, first, second):
-        return (abs(first[0] - second[0]) + abs(first[1] - second[1]))
-
     def cost_GREEDY_DFS(self, cell):
-        return self.distance(cell, self.board.goal)
+        return self.board.distance(cell, self.board.goal)
 
     def cost_A_STAR(self, cell):
-        return self.distance(cell, self.board.goal) + self.distance(cell, self.board.start)
+        return self.board.distance(cell, self.board.goal) + self.board.distance(cell, self.board.start)
 
 
 class Node:
