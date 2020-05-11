@@ -30,17 +30,20 @@ class Board:
         if self.cells is None:
             return None
 
-        neighbors = set()
+        neighbors = set([
+            (cell[0]-1, cell[1]),
+            (cell[0]+1, cell[1]),
+            (cell[0], cell[1]-1),
+            (cell[0], cell[1]+1)
+        ])
 
-        for i in range(cell[0] - 1, cell[0] + 2):
-            for j in range(cell[1] - 1, cell[1] + 2):
+        for i, j in set(neighbors):
 
-                # Ignore the cell itself and walls
-                if (i, j) == cell or (i, j) in self.walls:
-                    continue
-
-                if 0 <= i < self.rows and 0 <= j < self.cols:
-                    neighbors.add((i, j))
+            # Ignore the walls and respect board limits
+            if (i, j) in self.walls or \
+                    not 0 <= i < self.rows or \
+                    not 0 <= j < self.cols:
+                neighbors.remove((i, j))
 
         return neighbors
 
