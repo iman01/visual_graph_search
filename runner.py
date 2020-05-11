@@ -28,7 +28,7 @@ def main():
     board_width = ((2 / 3) * width) - (padding * 2)
     board_height = height - (padding * 2)
 
-    board = Board(board_width, board_height)
+    board = Board(board_width, board_height, 16, 16)
 
     while True:
         # Check if game quit
@@ -72,7 +72,7 @@ def main():
 
                 if board.start is not None and board.goal is not None:
                     solver = Solver(board)
-                    solver.shortest_path()
+                    solver.shortest_path(solver.GREEDY_BFS)
 
                 time.sleep(0.2)
 
