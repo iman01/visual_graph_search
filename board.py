@@ -67,15 +67,22 @@ class Board:
                 )
                 
                 color = colors.dict['WALL'] if (i, j) in self.walls else \
-                        colors.dict['PATH'] if (i, j) in self.path or (i, j) in [self.start, self.goal] else \
+                        colors.dict['START'] if (i, j) == self.start else \
+                        colors.dict['GOAL'] if (i, j) == self.goal else \
+                        colors.dict['PATH'] if (i, j) in self.path else \
                         colors.dict['EXPLORED'] if (i, j) in self.explored else \
                         colors.dict['FG']
 
                 pygame.draw.rect(screen, color, rect)
-                pygame.draw.rect(screen, colors.dict['GRID'], rect, 3)
+                pygame.draw.rect(screen, colors.dict['GRID'], rect, 1)
 
-                if (i, j) in self.path or (i, j) in self.explored:
-                    text = self.font.render(str(self.distance((i, j), self.goal)), True, colors.dict['TEXT'])
+                text = "A" if (i, j) == self.start else \
+                       "B" if (i, j) == self.goal else \
+                       str(self.distance((i, j), self.goal)) if (i, j) in self.path or (i, j) in self.explored else \
+                       None
+
+                if text is not None:
+                    text = self.font.render(text, True, colors.dict['TEXT'])
                     font_rect = text.get_rect()
                     font_rect.center = rect.center
                     screen.blit(text, font_rect)

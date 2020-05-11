@@ -8,7 +8,7 @@ from board import Board
 
 
 def main():
-    width = 800
+    width = 900
     height = 600
     
     padding = 20
