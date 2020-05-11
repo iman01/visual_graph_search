@@ -53,6 +53,7 @@ class Solver:
         return self.board.distance(cell, self.board.goal)
 
     def cost_A_STAR(self, cell):
+        # TODO Fix this cost function, I'm not calculating the cost to reach node correctly
         return self.board.distance(cell, self.board.goal) + self.board.distance(cell, self.board.start)
 
     def cost_none(self, cell):
