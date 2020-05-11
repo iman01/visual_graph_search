@@ -50,9 +50,20 @@ def main():
         pygame.draw.rect(screen, colors.dict['GRID'], startButton)
         screen.blit(buttonText, buttonRect)
 
+        # Clean button
+        cleanButton = pygame.Rect(
+            (2 / 3) * width + padding, (1 / 3) * height + 20,
+            (width / 3) - padding * 2, 50
+        )
+        buttonText = mediumFont.render("Clean", True, colors.dict['TEXT'])
+        buttonRect = buttonText.get_rect()
+        buttonRect.center = cleanButton.center
+        pygame.draw.rect(screen, colors.dict['GRID'], cleanButton)
+        screen.blit(buttonText, buttonRect)
+
         # Reset button
         resetButton = pygame.Rect(
-            (2 / 3) * width + padding, (1 / 3) * height + 20,
+            (2 / 3) * width + padding, (1 / 3) * height + 90,
             (width / 3) - padding * 2, 50
         )
         buttonText = mediumFont.render("Reset", True, colors.dict['TEXT'])
@@ -72,9 +83,14 @@ def main():
 
                 if board.start is not None and board.goal is not None:
                     solver = Solver(board)
-                    solver.shortest_path(solver.GREEDY_BFS)
+                    solver.shortest_path(solver.A_STAR)
 
                 time.sleep(0.2)
+
+            # Clean button clicked
+            elif cleanButton.collidepoint(mouse):
+                board.clean()
+                continue
 
             # Reset button clicked
             elif resetButton.collidepoint(mouse):

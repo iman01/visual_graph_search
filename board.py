@@ -19,6 +19,10 @@ class Board:
         self.start = None
         self.goal = None
 
+    def clean(self):
+        self.explored = set()
+        self.path = []
+
     def get_neighbors(self, cell):
         if self.cells is None:
             return None
