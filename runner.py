@@ -8,6 +8,8 @@ COLOR_FG = (128, 128, 128)
 COLOR_GRID = (255, 255, 255)
 COLOR_WALL = (255, 64, 64)
 COLOR_TEXT = (0, 0, 0)
+COLOR_PATH = (255, 255, 64)
+COLOR_EXPLORED = (64, 32, 0)
 
 
 class Board:
@@ -55,6 +57,11 @@ class Board:
 
                 pygame.draw.rect(screen, color, rect)
                 pygame.draw.rect(screen, COLOR_GRID, rect, 3)
+
+                if (i, j) in self.path:
+                    pygame.draw.circle(screen, COLOR_PATH, rect.center, self.cell_size // 5)
+                elif (i, j) in self.explored:
+                    pygame.draw.circle(screen, COLOR_EXPLORED, rect.center, self.cell_size // 5) 
                 
                 if self.start == (i, j):
                     screen.blit(self.start_icon, rect)
