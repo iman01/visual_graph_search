@@ -22,7 +22,7 @@ class Board:
     def reset(self):
         self.walls = set()
         self.explored = set()
-        self.path = set()
+        self.path = []
         self.start = None
         self.goal = None
 

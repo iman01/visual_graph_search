@@ -14,7 +14,32 @@ class Solver:
 
         self.board.explored = set()
 
-        self.board.explored = self.board.get_neighbors(start.state)
+        while True:
+
+            if frontier.empty():
+                print('No solution')
+                return None
+
+            node = frontier.remove()
+
+            for neighbor in self.board.get_neighbors(node.state):
+                if not frontier.contains_state(neighbor) and neighbor not in self.board.explored:
+                    child = Node(state=neighbor, parent=node, action=None)
+
+                    if child.state == self.board.goal:
+                        path = []
+
+                        while child.parent is not None:
+                            path.append(child.state)
+                            child = child.parent
+
+                        path.reverse()
+                        self.board.path = path
+                        return
+                    else:
+                        frontier.add(child)
+
+            self.board.explored.add(node.state) 
 
 
 class Node:
@@ -49,7 +74,7 @@ class StackFrontier:
 
 
 class QueueFrontier(StackFrontier):
-    
+
     def remove(self):
         if self.empty():
             raise Exception("Empty frontier")
