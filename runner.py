@@ -39,20 +39,53 @@ def main():
         screen.fill(colors.dict['BG'])
         board.draw(screen, (padding, padding))
 
-        # Start button
-        startButton = pygame.Rect(
-            (2 / 3) * width + padding, (1 / 3) * height - 50,
+        # DFS button
+        dfsButton = pygame.Rect(
+            (2 / 3) * width + padding, (1 / 3) * height - 170,
             (width / 3) - padding * 2, 50
         )
-        buttonText = mediumFont.render("Start", True, colors.dict['TEXT'])
+        buttonText = mediumFont.render("DFS", True, colors.dict['TEXT'])
         buttonRect = buttonText.get_rect()
-        buttonRect.center = startButton.center
-        pygame.draw.rect(screen, colors.dict['GRID'], startButton)
+        buttonRect.center = dfsButton.center
+        pygame.draw.rect(screen, colors.dict['GRID'], dfsButton)
+        screen.blit(buttonText, buttonRect)
+
+        # BFS button
+        bfsButton = pygame.Rect(
+            (2 / 3) * width + padding, (1 / 3) * height - 100,
+            (width / 3) - padding * 2, 50
+        )
+        buttonText = mediumFont.render("BFS", True, colors.dict['TEXT'])
+        buttonRect = buttonText.get_rect()
+        buttonRect.center = bfsButton.center
+        pygame.draw.rect(screen, colors.dict['GRID'], bfsButton)
+        screen.blit(buttonText, buttonRect)
+
+        # GREEDY BFS button
+        greedyBfsButton = pygame.Rect(
+            (2 / 3) * width + padding, (1 / 3) * height - 30,
+            (width / 3) - padding * 2, 50
+        )
+        buttonText = mediumFont.render("GREEDY BFS", True, colors.dict['TEXT'])
+        buttonRect = buttonText.get_rect()
+        buttonRect.center = greedyBfsButton.center
+        pygame.draw.rect(screen, colors.dict['GRID'], greedyBfsButton)
+        screen.blit(buttonText, buttonRect)
+
+        # A* button
+        aStarButton = pygame.Rect(
+            (2 / 3) * width + padding, (1 / 3) * height + 40,
+            (width / 3) - padding * 2, 50
+        )
+        buttonText = mediumFont.render("A*", True, colors.dict['TEXT'])
+        buttonRect = buttonText.get_rect()
+        buttonRect.center = aStarButton.center
+        pygame.draw.rect(screen, colors.dict['GRID'], aStarButton)
         screen.blit(buttonText, buttonRect)
 
         # Clean button
         cleanButton = pygame.Rect(
-            (2 / 3) * width + padding, (1 / 3) * height + 20,
+            (2 / 3) * width + padding, (1 / 3) * height + 150,
             (width / 3) - padding * 2, 50
         )
         buttonText = mediumFont.render("Clean", True, colors.dict['TEXT'])
@@ -63,7 +96,7 @@ def main():
 
         # Reset button
         resetButton = pygame.Rect(
-            (2 / 3) * width + padding, (1 / 3) * height + 90,
+            (2 / 3) * width + padding, (1 / 3) * height + 220,
             (width / 3) - padding * 2, 50
         )
         buttonText = mediumFont.render("Reset", True, colors.dict['TEXT'])
@@ -78,8 +111,35 @@ def main():
         if left == 1:
             mouse = pygame.mouse.get_pos()
 
-            # Start button clicked
-            if startButton.collidepoint(mouse):
+            # DFS button clicked
+            if dfsButton.collidepoint(mouse):
+
+                if board.start is not None and board.goal is not None:
+                    solver = Solver(board)
+                    solver.shortest_path(solver.DFS)
+
+                time.sleep(0.2)
+
+            # BFS button clicked
+            if bfsButton.collidepoint(mouse):
+
+                if board.start is not None and board.goal is not None:
+                    solver = Solver(board)
+                    solver.shortest_path(solver.BFS)
+
+                time.sleep(0.2)
+
+            # GREEDY BFS button clicked
+            if greedyBfsButton.collidepoint(mouse):
+
+                if board.start is not None and board.goal is not None:
+                    solver = Solver(board)
+                    solver.shortest_path(solver.GREEDY_BFS)
+
+                time.sleep(0.2)
+
+            # A STAR button clicked
+            if aStarButton.collidepoint(mouse):
 
                 if board.start is not None and board.goal is not None:
                     solver = Solver(board)
@@ -103,6 +163,7 @@ def main():
                     for j in range(board.cols):
                         if (board.cells[i][j].collidepoint(mouse)):
                             board.walls.add((i, j))
+
         elif right == 1:
             mouse = pygame.mouse.get_pos()
 
