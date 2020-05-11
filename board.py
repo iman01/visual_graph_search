@@ -10,13 +10,6 @@ class Board:
         self.cols = cols
 
         self.cell_size = int(min(board_width / cols, board_height / rows))
-
-        # Add images
-        self.start_icon = pygame.image.load("assets/images/start.png")
-        self.start_icon = pygame.transform.scale(self.start_icon, (self.cell_size, self.cell_size))
-        self.goal_icon = pygame.image.load("assets/images/goal.png")
-        self.goal_icon = pygame.transform.scale(self.goal_icon, (self.cell_size, self.cell_size))
-
         self.reset()
 
     def reset(self):
@@ -63,21 +56,12 @@ class Board:
                 )
                 
                 color = colors.dict['WALL'] if (i, j) in self.walls else \
-                        colors.dict['GRID'] if (i, j) in [self.start, self.goal] else \
+                        colors.dict['PATH'] if (i, j) in self.path or (i, j) in [self.start, self.goal] else \
+                        colors.dict['EXPLORED'] if (i, j) in self.explored else \
                         colors.dict['FG']
 
                 pygame.draw.rect(screen, color, rect)
                 pygame.draw.rect(screen, colors.dict['GRID'], rect, 3)
-
-                if (i, j) in self.path:
-                    pygame.draw.circle(screen, colors.dict['PATH'], rect.center, self.cell_size // 5)
-                elif (i, j) in self.explored:
-                    pygame.draw.circle(screen, colors.dict['EXPLORED'], rect.center, self.cell_size // 5) 
-                
-                if self.start == (i, j):
-                    screen.blit(self.start_icon, rect)
-                elif self.goal == (i, j):
-                    screen.blit(self.goal_icon, rect)
             
                 row.append(rect)
             self.cells.append(row)
