@@ -10,7 +10,10 @@ class Solver:
 
         start = Node(state=self.board.start, parent=None, action=None)
 
-        frontier = QueueFrontier() if algorithm == self.DFS else StackFrontier()
+        frontier = QueueFrontier() if algorithm == self.DFS else \
+                   StackFrontier() if algorithm == self.BFS else \
+                   GreedyFrontier(self.cost_to_goal)
+
         frontier.add(start)
 
         self.board.explored = set()
@@ -21,10 +24,7 @@ class Solver:
                 print('No solution')
                 return None
 
-            if algorithm == self.DFS or algorithm == self.BFS:
-                node = frontier.remove()
-            elif algorithm == self.GREEDY_BFS:
-                node = frontier.remove_best(self.cost_to_goal)
+            node = frontier.remove()
 
             for neighbor in self.board.get_neighbors(node.state):
                 if not frontier.contains_state(neighbor) and neighbor not in self.board.explored:
@@ -45,8 +45,11 @@ class Solver:
 
             self.board.explored.add(node.state)
 
+    def distance(self, first, second):
+        return (abs(first[0] - second[0]) + abs(first[1] - second[1]))
+
     def cost_to_goal(self, cell):
-        return (abs(cell[0] - self.board.goal[0]) + abs(cell[1] - self.board.goal[1]))
+        return self.distance(cell, self.board.goal)
 
 
 class Node:
@@ -77,21 +80,7 @@ class StackFrontier:
         else:
             node = self.list[-1]
             self.list = self.list[:-1]
-            return node
-
-    def remove_best(self, cost_function):
-        if self.empty():
-            raise Exception("Empty frontier")
-        else:
-            best_node = None
-            min_cost = float("inf")
-            for node in self.list:
-                if cost_function(node.state) < min_cost:
-                    best_node = node
-                    min_cost = cost_function(node.state)
-
-            self.list.remove(best_node)
-            return best_node           
+            return node      
 
 
 class QueueFrontier(StackFrontier):
@@ -103,3 +92,19 @@ class QueueFrontier(StackFrontier):
             node = self.list[0]
             self.list = self.list[1:]
             return node
+
+
+class GreedyFrontier(StackFrontier):
+
+    def __init__(self, cost_function):
+        self.list = []
+        self.cost_function = cost_function
+
+    def add(self, new):
+        i = 0
+
+        for i, node in enumerate(self.list):
+            if self.cost_function(new.state) > self.cost_function(node.state):            
+                break
+
+        self.list.insert(i, new)
