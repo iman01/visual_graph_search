@@ -18,6 +18,9 @@ class Solver:
         frontier.add(start)
 
         self.board.explored = set()
+        self.board.cost_text_callback = self.cost_GREEDY_DFS if algorithm == self.GREEDY_BFS else \
+                                        self.cost_A_STAR if algorithm == self.A_STAR else \
+                                        self.cost_none
 
         while True:
 
@@ -52,6 +55,9 @@ class Solver:
     def cost_A_STAR(self, cell):
         return self.board.distance(cell, self.board.goal) + self.board.distance(cell, self.board.start)
 
+    def cost_none(self, cell):
+        return None
+
 
 class Node:
 
@@ -60,11 +66,20 @@ class Node:
         self.parent = parent
         self.action = action
 
+    def __str__(self):
+        return f"state: {self.state}, action: {self.action}"
+
+    def __repr__(self):
+        return self.__str__()
+
 
 class StackFrontier:
 
     def __init__(self):
         self.list = []
+
+    def __str__(self):
+        return str(self.list)
 
     def add(self, node):
         self.list.append(node)

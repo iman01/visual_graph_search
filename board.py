@@ -16,6 +16,9 @@ class Board:
         OPEN_SANS = "assets/fonts/OpenSans-Regular.ttf"
         self.font = pygame.font.Font(OPEN_SANS, int(self.cell_size * 0.7))
 
+    def cost_text_callback(self, cell):
+        return None
+
     def reset(self):
         self.walls = set()
         self.explored = set()
@@ -78,11 +81,11 @@ class Board:
 
                 text = "A" if (i, j) == self.start else \
                        "B" if (i, j) == self.goal else \
-                       str(self.distance((i, j), self.goal)) if (i, j) in self.path or (i, j) in self.explored else \
+                       self.cost_text_callback((i, j)) if (i, j) in self.path or (i, j) in self.explored else \
                        None
 
                 if text is not None:
-                    text = self.font.render(text, True, colors.dict['TEXT'])
+                    text = self.font.render(str(text), True, colors.dict['TEXT'])
                     font_rect = text.get_rect()
                     font_rect.center = rect.center
                     screen.blit(text, font_rect)
