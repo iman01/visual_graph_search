@@ -12,7 +12,8 @@ class Solver:
 
         frontier = QueueFrontier() if algorithm == self.DFS else \
                    StackFrontier() if algorithm == self.BFS else \
-                   GreedyFrontier(self.cost_to_goal)
+                   GreedyFrontier(self.cost_GREEDY_DFS) if algorithm == self.GREEDY_BFS else \
+                   GreedyFrontier(self.cost_A_STAR)
 
         frontier.add(start)
 
@@ -48,8 +49,11 @@ class Solver:
     def distance(self, first, second):
         return (abs(first[0] - second[0]) + abs(first[1] - second[1]))
 
-    def cost_to_goal(self, cell):
+    def cost_GREEDY_DFS(self, cell):
         return self.distance(cell, self.board.goal)
+
+    def cost_A_STAR(self, cell):
+        return self.distance(cell, self.board.goal) + self.distance(cell, self.board.start)
 
 
 class Node:
