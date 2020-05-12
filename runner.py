@@ -114,36 +114,36 @@ def main():
             # DFS button clicked
             if dfsButton.collidepoint(mouse):
 
-                if board.start is not None and board.goal is not None:
+                if board.source is not None and board.target is not None:
                     solver = Solver(board)
-                    solver.shortest_path(solver.DFS)
+                    board.path = solver.search_path(solver.DFS)
 
                 time.sleep(0.2)
 
             # BFS button clicked
             if bfsButton.collidepoint(mouse):
 
-                if board.start is not None and board.goal is not None:
+                if board.source is not None and board.target is not None:
                     solver = Solver(board)
-                    solver.shortest_path(solver.BFS)
+                    board.path = solver.search_path(solver.BFS)
 
                 time.sleep(0.2)
 
             # GREEDY BFS button clicked
             if greedyBfsButton.collidepoint(mouse):
 
-                if board.start is not None and board.goal is not None:
+                if board.source is not None and board.target is not None:
                     solver = Solver(board)
-                    solver.shortest_path(solver.GREEDY_BFS)
+                    board.path = solver.search_path(solver.GREEDY_BFS)
 
                 time.sleep(0.2)
 
             # A STAR button clicked
             if aStarButton.collidepoint(mouse):
 
-                if board.start is not None and board.goal is not None:
+                if board.source is not None and board.target is not None:
                     solver = Solver(board)
-                    solver.shortest_path(solver.A_STAR)
+                    board.path = solver.search_path(solver.A_STAR)
 
                 time.sleep(0.2)
 
@@ -171,10 +171,10 @@ def main():
             for i in range(board.rows):
                 for j in range(board.cols):
                     if (board.cells[i][j].collidepoint(mouse)):
-                        if board.start is None:
-                            board.start = (i, j)
-                        elif board.goal is None and board.start != (i, j):
-                            board.goal = (i, j)
+                        if board.source is None:
+                            board.source = (i, j)
+                        elif board.target is None and board.source != (i, j):
+                            board.target = (i, j)
 
         pygame.display.flip()
 

@@ -1,8 +1,9 @@
 import pygame
 
 import colors
+from solver import Environment
 
-class Board:
+class Board(Environment):
 
     def __init__(self, board_width, board_height, rows = 8, cols = 8):
 
@@ -12,7 +13,6 @@ class Board:
         self.cell_size = int(min(board_width / cols, board_height / rows))
         self.reset()
 
-        # Fonts
         OPEN_SANS = "assets/fonts/OpenSans-Regular.ttf"
         self.font = pygame.font.Font(OPEN_SANS, int(self.cell_size * 0.7))
 
@@ -20,36 +20,45 @@ class Board:
         self.walls = set()
         self.explored = set()
         self.path = []
-        self.start = None
-        self.goal = None
+        self.source = None
+        self.target = None
 
     def clean(self):
         self.explored = set()
         self.path = []
 
-    def get_neighbors(self, cell):
-        if self.cells is None:
-            return None
+    def get_actions(self, cell):
+        actions = set()
 
-        neighbors = set([
-            (cell[0]-1, cell[1]),
-            (cell[0]+1, cell[1]),
-            (cell[0], cell[1]-1),
-            (cell[0], cell[1]+1)
-        ])
+        if cell[0] > 0:
+            actions.add('up')
+        if cell[0] < self.rows - 1:
+            actions.add('down')
+        if cell[1] > 0:
+            actions.add('left')
+        if cell[1] < self.cols - 1:
+            actions.add('right')
 
-        for i, j in set(neighbors):
+        return actions
 
-            # Ignore the walls and respect board limits
-            if (i, j) in self.walls or \
-                    not 0 <= i < self.rows or \
-                    not 0 <= j < self.cols:
-                neighbors.remove((i, j))
+    def transition_model(self, cell, action):
 
-        return neighbors
+        if action == 'up':
+            i, j = cell[0]-1, cell[1]
+        if action == 'down':
+            i, j = cell[0]+1, cell[1]
+        if action == 'left':
+            i, j = cell[0], cell[1]-1
+        if action == 'right':
+            i, j = cell[0], cell[1]+1
 
-    def distance(self, first, second):
-        return (abs(first[0] - second[0]) + abs(first[1] - second[1]))
+        if (i, j) not in self.walls:
+            return i, j
+        else:
+            return cell
+
+    def cost_to_target(self, cell):
+        return (abs(cell[0] - self.target[0]) + abs(cell[1] - self.target[1]))
 
     def draw(self, screen, origin):
         self.board_origin = origin
@@ -65,19 +74,21 @@ class Board:
                     origin[1] + i * self.cell_size,
                     self.cell_size, self.cell_size
                 )
-                
+
+                path = [item[0] for item in self.path] if self.path is not None else []
+
                 color = colors.dict['WALL'] if (i, j) in self.walls else \
-                        colors.dict['START'] if (i, j) == self.start else \
-                        colors.dict['GOAL'] if (i, j) == self.goal else \
-                        colors.dict['PATH'] if (i, j) in self.path else \
+                        colors.dict['START'] if (i, j) == self.source else \
+                        colors.dict['GOAL'] if (i, j) == self.target else \
+                        colors.dict['PATH'] if (i, j) in path else \
                         colors.dict['EXPLORED'] if (i, j) in self.explored else \
                         colors.dict['FG']
 
                 pygame.draw.rect(screen, color, rect)
                 pygame.draw.rect(screen, colors.dict['GRID'], rect, 1)
 
-                text = "A" if (i, j) == self.start else \
-                       "B" if (i, j) == self.goal else \
+                text = "A" if (i, j) == self.source else \
+                       "B" if (i, j) == self.target else \
                        None
 
                 if text is not None:
