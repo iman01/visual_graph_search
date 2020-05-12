@@ -12,15 +12,12 @@ class Solver:
 
         frontier = QueueFrontier() if algorithm == self.DFS else \
                    StackFrontier() if algorithm == self.BFS else \
-                   GreedyFrontier(self.cost_GREEDY_DFS) if algorithm == self.GREEDY_BFS else \
+                   GreedyFrontier(self.cost_GREEDY_BFS) if algorithm == self.GREEDY_BFS else \
                    GreedyFrontier(self.cost_A_STAR)
 
         frontier.add(start)
 
         self.board.explored = set()
-        self.board.cost_text_callback = self.cost_GREEDY_DFS if algorithm == self.GREEDY_BFS else \
-                                        self.cost_A_STAR if algorithm == self.A_STAR else \
-                                        self.cost_none
 
         while True:
 
@@ -49,12 +46,11 @@ class Solver:
 
             self.board.explored.add(node.state)
 
-    def cost_GREEDY_DFS(self, cell):
-        return self.board.distance(cell, self.board.goal)
+    def cost_GREEDY_BFS(self, node):
+        return self.board.distance(node.state, self.board.goal)
 
-    def cost_A_STAR(self, cell):
-        # TODO Fix this cost function, I'm not calculating the cost to reach node correctly
-        return self.board.distance(cell, self.board.goal) + self.board.distance(cell, self.board.start)
+    def cost_A_STAR(self, node):
+        return self.board.distance(node.state, self.board.goal) + node.cost
 
     def cost_none(self, cell):
         return None
@@ -66,9 +62,15 @@ class Node:
         self.state = state
         self.parent = parent
         self.action = action
+        self.cost = 0
+
+        child = self
+        while child.parent is not None:
+            child = child.parent
+            self.cost += 1
 
     def __str__(self):
-        return f"state: {self.state}, action: {self.action}"
+        return f"state: {self.state}, action: {self.action}, cost: {self.cost}"
 
     def __repr__(self):
         return self.__str__()
@@ -118,10 +120,13 @@ class GreedyFrontier(StackFrontier):
         self.cost_function = cost_function
 
     def add(self, new):
-        i = 0
+        position = 0
 
-        for i, node in enumerate(self.list):
-            if self.cost_function(new.state) > self.cost_function(node.state):            
+        for node in self.list:
+            if self.cost_function(new) <= self.cost_function(node):
+                position += 1
+                continue
+            else:
                 break
 
-        self.list.insert(i, new)
+        self.list.insert(position, new)
