@@ -177,7 +177,7 @@ def main():
                         elif board.target is None:
                             board.target = cell.position
 
-            time.sleep(0.2)
+            time.sleep(0.1)
 
         pygame.display.flip()
 
