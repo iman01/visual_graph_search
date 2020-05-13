@@ -28,7 +28,7 @@ def main():
     board_width = ((2 / 3) * width) - (padding * 2)
     board_height = height - (padding * 2)
 
-    board = Board(board_width, board_height, 16, 16)
+    board = Board(screen, (padding, padding), (board_width, board_height), 25, 25)
 
     while True:
         # Check if game quit
@@ -37,7 +37,7 @@ def main():
                 sys.exit()
 
         screen.fill(colors.dict['BG'])
-        board.draw(screen, (padding, padding))
+        board.draw()
 
         # DFS button
         dfsButton = pygame.Rect(
@@ -116,6 +116,7 @@ def main():
 
                 if board.source is not None and board.target is not None:
                     solver = Solver(board)
+                    board.clean()
                     board.path = solver.search_path(solver.DFS)
 
                 time.sleep(0.2)
@@ -125,6 +126,7 @@ def main():
 
                 if board.source is not None and board.target is not None:
                     solver = Solver(board)
+                    board.clean()
                     board.path = solver.search_path(solver.BFS)
 
                 time.sleep(0.2)
@@ -134,6 +136,7 @@ def main():
 
                 if board.source is not None and board.target is not None:
                     solver = Solver(board)
+                    board.clean()
                     board.path = solver.search_path(solver.GREEDY_BFS)
 
                 time.sleep(0.2)
@@ -143,6 +146,7 @@ def main():
 
                 if board.source is not None and board.target is not None:
                     solver = Solver(board)
+                    board.clean()
                     board.path = solver.search_path(solver.A_STAR)
 
                 time.sleep(0.2)
@@ -159,22 +163,24 @@ def main():
 
             # Cell left-clicked
             else:
-                for i in range(board.rows):
-                    for j in range(board.cols):
-                        if (board.cells[i][j].collidepoint(mouse)):
-                            board.walls.add((i, j))
+                for row in board.cells:
+                    for cell in row:
+                        if (cell.rect.collidepoint(mouse)):
+                            board.walls.add(cell.position)
 
         elif right == 1:
             mouse = pygame.mouse.get_pos()
 
             # Cell right-clicked
-            for i in range(board.rows):
-                for j in range(board.cols):
-                    if (board.cells[i][j].collidepoint(mouse)):
+            for row in board.cells:
+                for cell in row:
+                    if (cell.rect.collidepoint(mouse)):
                         if board.source is None:
-                            board.source = (i, j)
-                        elif board.target is None and board.source != (i, j):
-                            board.target = (i, j)
+                            board.source = cell.position
+                        elif board.target is None:
+                            board.target = cell.position
+
+            time.sleep(0.2)
 
         pygame.display.flip()
 
