@@ -2,7 +2,6 @@ import pygame
 import sys
 import time
 
-import colors
 from solver import Solver
 from board import Board
 
@@ -15,8 +14,6 @@ def main():
 
     pygame.init()
     screen = pygame.display.set_mode((width, height))
-
-    colors.init()
 
     # Fonts
     OPEN_SANS = "assets/fonts/OpenSans-Regular.ttf"
@@ -36,7 +33,7 @@ def main():
             if event.type == pygame.QUIT:
                 sys.exit()
 
-        screen.fill(colors.dict['BG'])
+        screen.fill((0, 0, 0))
         board.draw()
 
         # DFS button
@@ -44,10 +41,10 @@ def main():
             (2 / 3) * width + padding, (1 / 3) * height - 170,
             (width / 3) - padding * 2, 50
         )
-        buttonText = mediumFont.render("DFS", True, colors.dict['TEXT'])
+        buttonText = mediumFont.render("DFS", True, (0, 0, 0))
         buttonRect = buttonText.get_rect()
         buttonRect.center = dfsButton.center
-        pygame.draw.rect(screen, colors.dict['GRID'], dfsButton)
+        pygame.draw.rect(screen, (255, 255, 255), dfsButton)
         screen.blit(buttonText, buttonRect)
 
         # BFS button
@@ -55,10 +52,10 @@ def main():
             (2 / 3) * width + padding, (1 / 3) * height - 100,
             (width / 3) - padding * 2, 50
         )
-        buttonText = mediumFont.render("BFS", True, colors.dict['TEXT'])
+        buttonText = mediumFont.render("BFS", True, (0, 0, 0))
         buttonRect = buttonText.get_rect()
         buttonRect.center = bfsButton.center
-        pygame.draw.rect(screen, colors.dict['GRID'], bfsButton)
+        pygame.draw.rect(screen, (255, 255, 255), bfsButton)
         screen.blit(buttonText, buttonRect)
 
         # GREEDY BFS button
@@ -66,10 +63,10 @@ def main():
             (2 / 3) * width + padding, (1 / 3) * height - 30,
             (width / 3) - padding * 2, 50
         )
-        buttonText = mediumFont.render("GREEDY BFS", True, colors.dict['TEXT'])
+        buttonText = mediumFont.render("GREEDY BFS", True, (0, 0, 0))
         buttonRect = buttonText.get_rect()
         buttonRect.center = greedyBfsButton.center
-        pygame.draw.rect(screen, colors.dict['GRID'], greedyBfsButton)
+        pygame.draw.rect(screen, (255, 255, 255), greedyBfsButton)
         screen.blit(buttonText, buttonRect)
 
         # A* button
@@ -77,10 +74,10 @@ def main():
             (2 / 3) * width + padding, (1 / 3) * height + 40,
             (width / 3) - padding * 2, 50
         )
-        buttonText = mediumFont.render("A*", True, colors.dict['TEXT'])
+        buttonText = mediumFont.render("A*", True, (0, 0, 0))
         buttonRect = buttonText.get_rect()
         buttonRect.center = aStarButton.center
-        pygame.draw.rect(screen, colors.dict['GRID'], aStarButton)
+        pygame.draw.rect(screen, (255, 255, 255), aStarButton)
         screen.blit(buttonText, buttonRect)
 
         # Clean button
@@ -88,10 +85,10 @@ def main():
             (2 / 3) * width + padding, (1 / 3) * height + 150,
             (width / 3) - padding * 2, 50
         )
-        buttonText = mediumFont.render("Clean", True, colors.dict['TEXT'])
+        buttonText = mediumFont.render("Clean", True, (0, 0, 0))
         buttonRect = buttonText.get_rect()
         buttonRect.center = cleanButton.center
-        pygame.draw.rect(screen, colors.dict['GRID'], cleanButton)
+        pygame.draw.rect(screen, (255, 255, 255), cleanButton)
         screen.blit(buttonText, buttonRect)
 
         # Reset button
@@ -99,10 +96,10 @@ def main():
             (2 / 3) * width + padding, (1 / 3) * height + 220,
             (width / 3) - padding * 2, 50
         )
-        buttonText = mediumFont.render("Reset", True, colors.dict['TEXT'])
+        buttonText = mediumFont.render("Reset", True, (0, 0, 0))
         buttonRect = buttonText.get_rect()
         buttonRect.center = resetButton.center
-        pygame.draw.rect(screen, colors.dict['GRID'], resetButton)
+        pygame.draw.rect(screen, (255, 255, 255), resetButton)
         screen.blit(buttonText, buttonRect)
 
         # Mouse action

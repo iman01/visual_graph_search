@@ -1,6 +1,5 @@
 import pygame
 
-import colors
 from solver import Environment
 
 class Board(Environment):
