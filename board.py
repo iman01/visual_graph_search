@@ -3,7 +3,26 @@ import pygame
 from solver import Environment
 
 class Board(Environment):
+    """Board class
 
+    Subclass of environment with application specific methods.
+    Every state corresponds to the current coordinates of the agent.
+
+    Attributes:
+        source: Starting state of the system.
+        target: Goal state of the system.
+        explored (set): Set of explored states.
+
+        screen: PyGame display.
+        origin (tuple): Coordinates for the top left corner of the board.
+        size (tuple): Pixel size for the board.
+        rows: Row quantity.
+        cols: Column quantity.
+
+        cells: Array with all the cell objects in the board.
+        walls (set): Set with all the wall cells.
+        path (list): List of steps from source to target cell.
+    """
     def __init__(self, screen, origin, size, rows = 8, cols = 8):
         self.screen = screen
         self.origin = origin
@@ -25,18 +44,41 @@ class Board(Environment):
         self.reset()
 
     def reset(self):
+        """Reset board
+
+        Resets the board to its initial state. With no source nor target and
+        without walls.
+
+        Also cleans all explored and path cells.
+        """
         self.walls = set()
         self.source = None
         self.target = None
         self.clean()
 
     def clean(self):
+        """Clean board
+
+        Resets explored set, path and updates drawing. It does not modify
+        selected source and target cells and walls.
+        """
         self.explored = set()
         self.path = []
         self.draw()
         pygame.display.flip()
 
     def get_actions(self, state):
+        """Get actions from environment
+
+        Returns a list of possible actions in the given state.
+        Each action is represented with a string value (up, down, left, right).
+
+        Parameters:
+            state: Current state (agent coordinates).
+
+        Returns:
+            actions (list): A list of actions that can be taken in a state.
+        """
         actions = set()
 
         if state[0] > 0:
@@ -51,7 +93,20 @@ class Board(Environment):
         return actions
 
     def transition_model(self, state, action):
+        """Transition model
 
+        Returns the new state resulting from performing given action in the
+        current state. If there is no wall in the direction indicated by action,
+        updates the display with the new position. Otherwise returns the same
+        state.
+
+        Parameters:
+            state: Current state (agent coordinates).
+            action: Action to be taken.
+
+        Returns:
+            new_state: State resulting from performing the action.
+        """
         if action == 'up':
             i, j = state[0]-1, state[1]
         if action == 'down':
@@ -70,10 +125,25 @@ class Board(Environment):
             return state
 
     def cost_to_target(self, cell):
+        """Estimate cost to target
+
+        Get estimated cost to reach target state from current state.
+        As every state is a pair of coordinates we calculate the Manhattan's 
+        distance from the current position to the target.
+
+        Parameters:
+            state: Current state.
+
+        Returns:
+            cost (int): integer representing the estimated cost.
+        """
         return (abs(cell[0] - self.target[0]) + abs(cell[1] - self.target[1]))
 
     def draw(self):
+        """Draw board
 
+        Update the board in the display.
+        """
         for row in self.cells:
             for cell in row:
 
@@ -82,6 +152,7 @@ class Board(Environment):
                 elif cell.position == self.target:
                     cell.draw(Cell.TARGET)
                 elif self.path is not None and cell.position in [item[0] for item in self.path]:
+                    # If cell is part of the path found
                     cell.draw(Cell.PATH)
                 elif cell.position in self.explored:
                     cell.draw(Cell.EXPLORED)
@@ -92,6 +163,10 @@ class Board(Environment):
                 
         
 class Cell:
+    """Cell class
+
+    Represents a cell in the board.
+    """
     EMPTY, WALL, PATH, EXPLORED, ACTIVE, SOURCE, TARGET = range(7)
 
     def __init__(self, board, position):
