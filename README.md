@@ -35,10 +35,14 @@ Ensure you have Python 3.7 or higher installed.
 
 ### Installation
 
-Clone this repository and install requirements:
- ["Forllow Instruction: "](https://github.com/iman01/venv)
+
+ ["Forllow This Instruction!"](https://github.com/iman01/venv)
   
  or 
+
+ Clone this repository and install requirements:
+  
+  
 ```
 $ git clone https://github.com/nahueespinosa/visual_search.git
 $ pip install -r requirements.txt
