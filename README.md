@@ -44,7 +44,8 @@ Ensure you have Python 3.7 or higher installed.
   
   
 ```
-$ git clone https://github.com/nahueespinosa/visual_search.git
+$ git clone https://github.com/iman01/visual_graph_search
+$ cd visual_graph_search
 $ pip install -r requirements.txt
 ```
 
