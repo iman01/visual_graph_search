@@ -3,7 +3,6 @@
 This is a game that allows you to visualize concepts and play with search algorithms for graph data structures.
 The interface is implemented with PyGame, and allows you to draw walls and select the `start` and `end` positions.
 
-For spanish version go to this [link](README_es.md).
 
 ![](images/demo.gif)
 
@@ -37,6 +36,9 @@ Ensure you have Python 3.7 or higher installed.
 ### Installation
 
 Clone this repository and install requirements:
+ ["Forllow Instruction: "](https://github.com/iman01/venv)
+  
+ or 
 ```
 $ git clone https://github.com/nahueespinosa/visual_search.git
 $ pip install -r requirements.txt
