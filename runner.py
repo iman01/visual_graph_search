@@ -174,7 +174,7 @@ def main():
                     if (cell.rect.collidepoint(mouse)):
                         if board.source is None:
                             board.source = cell.position
-                        elif board.target is None:
+                        elif board.target is None and cell.position != board.source:
                             board.target = cell.position
 
             time.sleep(0.1)
